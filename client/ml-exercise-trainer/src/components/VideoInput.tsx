@@ -38,7 +38,7 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
         style={{ display: "none" }}
         type="file"
         onChange={handleFileChange}
-        accept=".mov,.mp4"
+        accept=".mov,.mp4,.pdf"
       />
       {!source && <button onClick={handleChoose}>Choose</button>}
       {source && (
