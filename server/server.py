@@ -14,6 +14,9 @@ def http_call():
     data = {'data':'This text was fetched using an HTTP call to server on render'}
     return jsonify(data)
 
+# upload endpoint will acknowledge client (videoUpload component) that it's recv file
+
+
 @socketio.on("connect")
 def connected():
     """event listener when client connects to the server"""

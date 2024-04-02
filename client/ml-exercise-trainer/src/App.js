@@ -3,6 +3,7 @@ import HttpCall from "./components/HttpCall";
 import WebSocketCall from "./components/WebSocketCall.jsx";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
+import VideoInput from "./components/VideoInput.tsx";
 
 function App() {
   const [socketInstance, setSocketInstance] = useState("");
@@ -50,6 +51,9 @@ function App() {
       <div className="line">
         <HttpCall />
       </div>
+      <VideoInput onClick = {{
+        // Post request send file to server here do it with axios or fetch request
+      }} />
       {!buttonStatus ? (
         <button onClick={handleClick}>turn chat on</button>
       ) : (
