@@ -1,5 +1,5 @@
 import "./App.css";
-import HttpCall from "./components/HttpCall";
+import HttpCall from "./components/HttpCall.jsx";
 import WebSocketCall from "./components/WebSocketCall.jsx";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
@@ -16,6 +16,10 @@ function App() {
     } else {
       setButtonStatus(false);
     }
+  };
+
+  const handleFile = async (event) => {
+  
   };
 
   useEffect(() => {
@@ -51,19 +55,7 @@ function App() {
       <div className="line">
         <HttpCall />
       </div>
-      <VideoInput onClick = {{
-        // Post request send file to server here do it with axios or fetch request
-      }} />
-      {!buttonStatus ? (
-        <button onClick={handleClick}>turn chat on</button>
-      ) : (
-        <>
-          <button onClick={handleClick}>turn chat off</button>
-          <div className="line">
-            {!loading && <WebSocketCall socket={socketInstance} />}
-          </div>
-        </>
-      )}
+      <VideoInput onClick = {handleFile} />
     </div>
   );
 }

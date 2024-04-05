@@ -16,6 +16,24 @@ def http_call():
 
 # upload endpoint will acknowledge client (videoUpload component) that it's recv file
 
+@app.route('/send_file', methods=["POST"])
+def send_file():
+    #file upload 
+    ack = {}
+    print("Acknowledged")
+    try:
+        file = request.files['file_uploaded']
+        filename = file.filename
+        print(f"File {filename} uploaded")
+        ack['status'] = 1
+
+    except Exception as e:
+        print(f"File upload error {e}")
+        ack["status"] = 0
+
+    return jsonify(ack);
+
+       
 
 @socketio.on("connect")
 def connected():

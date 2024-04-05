@@ -12,11 +12,27 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
 
   const [source, setSource] = useState<string | undefined>();
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
     setSource(url);
+    
+    if (file != null) {
+      const data = new FormData();
+      data.append('file_uploaded', file);
+
+      let response = await fetch('/send_file',
+        {
+          method: 'POST',
+          body: data,
+        }
+      );
+      let res = await response.json();
+      if (res.status !== 1) {
+        alert('Error uploading file');
+      }
+    }
   };
 
   const handleChoose = () => {
