@@ -18,9 +18,7 @@ function App() {
     }
   };
 
-  const handleFile = async (event) => {
-  
-  };
+  const handleFile = async (event) => {};
 
   useEffect(() => {
     if (buttonStatus === true) {
@@ -55,7 +53,7 @@ function App() {
       <div className="line">
         <HttpCall />
       </div>
-      <VideoInput onClick = {handleFile} />
+      <VideoInput onClick={handleFile} />
     </div>
   );
 }

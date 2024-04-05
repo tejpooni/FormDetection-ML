@@ -17,20 +17,18 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
     if (!file) return;
     const url = URL.createObjectURL(file);
     setSource(url);
-    
+
     if (file != null) {
       const data = new FormData();
-      data.append('file_uploaded', file);
+      data.append("file_uploaded", file);
 
-      let response = await fetch('/send_file',
-        {
-          method: 'POST',
-          body: data,
-        }
-      );
+      let response = await fetch("/send_file", {
+        method: "POST",
+        body: data,
+      });
       let res = await response.json();
       if (res.status !== 1) {
-        alert('Error uploading file');
+        alert("Error uploading file");
       }
     }
   };
@@ -60,8 +58,8 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       {source && (
         <video
           style={{ display: "block", margin: 0 }}
-          width="100%"
-          height={height}
+          width={"500px"}
+          height={"300px"}
           controls
           src={source}
         />
