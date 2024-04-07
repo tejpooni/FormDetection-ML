@@ -18,8 +18,6 @@ function App() {
     }
   };
 
-  const handleFile = async (event) => {};
-
   useEffect(() => {
     if (buttonStatus === true) {
       const socket = io("localhost:5001/", {
@@ -53,7 +51,7 @@ function App() {
       <div className="line">
         <HttpCall />
       </div>
-      <VideoInput onClick={handleFile} />
+      <VideoInput onClick={VideoInput.handleFileChange} />
     </div>
   );
 }
