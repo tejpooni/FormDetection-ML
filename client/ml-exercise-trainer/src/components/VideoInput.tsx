@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useRef, useState, ChangeEvent } from "react";
 
 interface VideoInputProps {
@@ -31,7 +32,17 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
         alert("Error uploading file");
       }else {
         // const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
-        setSource(res.video_url);
+        // axios.get('/get_feedback', {
+        //   headers:{
+        //     "Content-Type": "video/mp4"
+        //   },
+        //   responseType: "blob",
+        // }).then((response) => {
+        //   console.log(response);
+        //   const videoURL = URL.createObjectURL(response.data);
+        //   setSource(videoURL)
+        // })
+        
     }
     }
   };

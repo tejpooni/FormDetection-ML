@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>React/Flask App + socket.io</h1>
+      <h1>A.I.thlete - Fitness Trainer</h1>
       <div className="line">
         <HttpCall />
       </div>

@@ -4,14 +4,14 @@ export default function HttpCall() {
   const [data, setData] = useState("");
 
   useEffect(() => {
-    fetch("/http-call", {
+    fetch("/get_feedback", {
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
       .then((responseData) => {
-        setData(responseData.data);
+        setData(responseData.feedback);
       });
   });
   return (

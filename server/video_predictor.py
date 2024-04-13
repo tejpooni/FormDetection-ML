@@ -7,6 +7,7 @@ import mediapipe as mp
 import math
 import os
 import random as r
+import json
 
 class OwnLandmark:
     def __init__(self, x,y):
@@ -22,6 +23,18 @@ class OwnLandmark:
         4: left_shoulder_left_hip_left_ankle
         5: right_shoulder_right_hip_right_ankle
 """
+
+def write_feedback(exercise, feedback):
+    # Data to be written
+    dictionary = {
+        "feedback": f"Exercise: {exercise} \n {feedback}"
+    }
+    # Serializing json
+    json_object = json.dumps(dictionary, indent=2)
+    # Writing to sample.json
+    with open("outputs\\feedback.json", "w") as outfile:
+        outfile.write(json_object)
+
 def pushup(list_of_angles):
     list_of_angles[0] = abs(list_of_angles[0])
     list_of_angles[1] = abs(list_of_angles[1])
@@ -150,7 +163,7 @@ cap = cv2.VideoCapture(user_input)
 width = int(cap.get(3))
 height = int(cap.get(4))
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (width,height))
+out = cv2.VideoWriter('outputs\output.mp4', fourcc, 20.0, (width,height))
 
 #Check if camera was opened correctly
 if not (cap.isOpened()):
@@ -266,12 +279,15 @@ if SUCCESS:
     success_list = ["Good Job!", "Nice Work!", "Keep it up!", "Great Effort!", "Fantastic job!"] 
     print(r.choice(success_list))
 else:
-    ex = np.argmin(frame_ids)
+    ex = np.argmax(frame_ids)
     if ex == 0:
+        write_feedback(exercise_id[ex], feedback_oh)
         print(feedback_oh)
     elif ex == 1:
+        write_feedback(exercise_id[ex], feedback_pu)
         print(feedback_pu)
     else:
+        write_feedback(exercise_id[ex], feedback_sq)
         print(feedback_sq)
 
 # When everything done, release the capture

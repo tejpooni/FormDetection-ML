@@ -2,6 +2,7 @@ from flask import Flask, request,jsonify
 from flask_socketio import SocketIO,emit
 from flask_cors import CORS
 from flask import send_from_directory
+from flask import send_file as sf
 from werkzeug.utils import secure_filename
 import os
 
@@ -44,7 +45,7 @@ def send_file():
             ack['status'] = 1
             os.system('python video_predictor.py')
             #processed_video("output.mp4", os.path.join(app.config['UPLOAD_FOLDER'], processed_filename))
-            return jsonify(status=1,  video_url=f'output.mp4')
+            return jsonify(status = 1)
         else:
             print("No file part")
             ack['status'] = 0
@@ -55,7 +56,13 @@ def send_file():
     print("Sending ack to server")
     return jsonify(ack);
 
-       
+@app.route('/get_vid', methods=["GET"])
+def get_vid():  
+    return sf("outputs\output.mp4", mimetype='video/mp4', as_attachment=True)
+
+@app.route('/get_feedback', methods=["GET"])
+def get_feedback():
+    return sf("outputs\\feedback.json")
 
 @socketio.on("connect")
 def connected():
