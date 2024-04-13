@@ -1,12 +1,24 @@
 from flask import Flask, request,jsonify
 from flask_socketio import SocketIO,emit
 from flask_cors import CORS
+from flask import send_from_directory
+from werkzeug.utils import secure_filename
+import os
 
 # app init 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+app.config['UPLOAD_FOLDER'] = 'uploads/'  # Directory where files will be stored
 CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
+
+
+
+@app.route('/processed_video/<filename>')
+def processed_video(filename):
+    """Serve the processed video."""
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.route("/http-call")
 def http_call():
@@ -23,14 +35,24 @@ def send_file():
     print("Acknowledged")
     try:
         file = request.files['file_uploaded']
-        filename = file.filename
-        print(f"File {filename} uploaded")
-        ack['status'] = 1
+        if file:
+            file.filename = "videoInput.mp4"
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            print(f"File {filename} uploaded successfully")
+            ack['status'] = 1
+            os.system('python video_predictor.py')
+            #processed_video("output.mp4", os.path.join(app.config['UPLOAD_FOLDER'], processed_filename))
+            return jsonify(status=1,  video_url=f'output.mp4')
+        else:
+            print("No file part")
+            ack['status'] = 0
 
     except Exception as e:
         print(f"File upload error {e}")
         ack["status"] = 0
-
+    print("Sending ack to server")
     return jsonify(ack);
 
        
@@ -56,4 +78,5 @@ def disconnected():
 
 
 if __name__ == '__main__':
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)  # Ensure upload folder exists
     socketio.run(app, debug=True,port=5001)

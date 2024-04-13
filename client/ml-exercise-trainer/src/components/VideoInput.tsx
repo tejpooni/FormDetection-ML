@@ -29,7 +29,10 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       let res = await response.json();
       if (res.status !== 1) {
         alert("Error uploading file");
-      }
+      }else {
+        // const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
+        setSource(res.video_url);
+    }
     }
   };
 
@@ -64,6 +67,7 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
           src={source}
         />
       )}
+      {/* <div>{source ? <a href={source} target="_blank">Download Processed Video</a> : "Nothing selected"}</div> */}
       <div>{source || "Nothing selected"}</div>
     </div>
   );

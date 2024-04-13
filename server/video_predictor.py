@@ -5,6 +5,7 @@ import tensorflow as tf
 import cv2
 import mediapipe as mp
 import math
+import os
 
 class OwnLandmark:
     def __init__(self, x,y):
@@ -118,7 +119,6 @@ def __draw_label(img, text, pos, bg_color):
    cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
 
-
 exercise_id = {
     0 : 'overhead'     ,
     1 : 'pushups'      , 
@@ -132,8 +132,16 @@ feedback_oh = ""
 frame_ids = [0,0,0]
 
 model = keras.models.load_model(r"exercise_predictor.keras")
+for f in os.listdir("uploads"):
+    print(f)
+    if str(f).endswith(".mp4"):
+        user_input = r"uploads\videoInput.mp4" ## THIS NEEDS TO CHANGE 
+    elif str(f).endswith(".mov"):
+        user_input = r"uploads\videoInput.mov"
+    else:
+        print("No filetype supported")
+        os._exit(0)
 
-user_input = r"test vid\bad_squat_front.mp4" ## THIS NEEDS TO CHANGE 
 # Open the device at the ID 0
 # Use the camera ID based on
 # /dev/videoID needed
@@ -141,7 +149,7 @@ cap = cv2.VideoCapture(user_input)
 width = int(cap.get(3))
 height = int(cap.get(4))
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter('aaaaaa\output.mp4', fourcc, 20.0, (width,height))
+out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (width,height))
 
 #Check if camera was opened correctly
 if not (cap.isOpened()):
@@ -246,7 +254,7 @@ while cap.isOpened():
 
     # 5) Display the resulting frame
     out.write(frame)
-    cv2.imshow("preview",frame)
+    #cv2.imshow("preview",frame)
    
     #Waits for a user input to quit the application
     if cv2.waitKey(1) & 0xFF == ord('q'):
