@@ -6,6 +6,7 @@ import cv2
 import mediapipe as mp
 import math
 import os
+import random as r
 
 class OwnLandmark:
     def __init__(self, x,y):
@@ -261,7 +262,9 @@ while cap.isOpened():
         break
 
 if SUCCESS:
-    print("good job")
+    #print("good job")
+    success_list = ["Good Job!", "Nice Work!", "Keep it up!", "Great Effort!", "Fantastic job!"] 
+    print(r.choice(success_list))
 else:
     ex = np.argmin(frame_ids)
     if ex == 0:
