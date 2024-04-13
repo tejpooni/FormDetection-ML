@@ -162,7 +162,7 @@ for f in os.listdir("uploads"):
 cap = cv2.VideoCapture(user_input)
 width = int(cap.get(3))
 height = int(cap.get(4))
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+fourcc = cv2.VideoWriter_fourcc('H', '2', '6', '4')
 out = cv2.VideoWriter('outputs\output.mp4', fourcc, 20.0, (width,height))
 
 #Check if camera was opened correctly
@@ -292,5 +292,6 @@ else:
 
 # When everything done, release the capture
 out.release()
+os.system("ffmpeg -i outputs\output.mp4 -c:v libx264 -c:a aac -strict experimental outputs\output.mp4")
 cap.release()
 cv2.destroyAllWindows()

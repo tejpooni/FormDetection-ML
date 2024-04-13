@@ -31,17 +31,17 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       if (res.status !== 1) {
         alert("Error uploading file");
       }else {
-        // const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
-        // axios.get('/get_feedback', {
-        //   headers:{
-        //     "Content-Type": "video/mp4"
-        //   },
-        //   responseType: "blob",
-        // }).then((response) => {
-        //   console.log(response);
-        //   const videoURL = URL.createObjectURL(response.data);
-        //   setSource(videoURL)
-        // })
+        const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
+        axios.get('/get_vid', {
+          headers:{
+            "Content-Type": "video/mp4"
+          },
+          responseType: "blob",
+        }).then((response) => {
+          console.log(response.data);
+          const videoURL = URL.createObjectURL(response.data);
+          setSource(videoURL)
+        })
         
     }
     }
