@@ -27,7 +27,7 @@ class OwnLandmark:
 def write_feedback(exercise, feedback):
     # Data to be written
     dictionary = {
-        "feedback": f"Exercise: {exercise} \n {feedback}"
+        "feedback": f"Exercise: {exercise} \n Feedback: {feedback}"
     }
     # Serializing json
     json_object = json.dumps(dictionary, indent=2)
@@ -120,7 +120,7 @@ def find_angle(a,b,c):
 
 def __draw_label(img, text, pos, bg_color):
    font_face = cv2.FONT_HERSHEY_SIMPLEX
-   scale = 0.4
+   scale = 2
    color = (0, 0, 0)
    thickness = cv2.FILLED
    margin = 2
@@ -129,7 +129,7 @@ def __draw_label(img, text, pos, bg_color):
    end_x = pos[0] + txt_size[0][0] + margin
    end_y = pos[1] - txt_size[0][1] - margin
 
-   cv2.rectangle(img, pos, (end_x, end_y), bg_color, thickness)
+   cv2.rectangle(img, pos, (end_x+2, end_y+2), bg_color, thickness)
    cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
 
@@ -247,7 +247,7 @@ while cap.isOpened():
     #print(prediction)
     #print(predicted_class
     # 4) Adding the label on your frame
-    __draw_label(frame, 'Label: {}'.format(exercise_id[predicted_class[0]]), (20,20), (255,255,255))
+    __draw_label(frame, 'Label: {}'.format(exercise_id[predicted_class[0]]), (40,40), (255,255,255))
 
     # Feedback section
     frame_ids[predicted_class[0]] += 1
@@ -274,12 +274,14 @@ while cap.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+ex = np.argmax(frame_ids)
 if SUCCESS:
     #print("good job")
     success_list = ["Good Job!", "Nice Work!", "Keep it up!", "Great Effort!", "Fantastic job!"] 
-    print(r.choice(success_list))
+    feedback = r.choice(success_list)
+    write_feedback(exercise_id[ex], feedback)
+    print(feedback)
 else:
-    ex = np.argmax(frame_ids)
     if ex == 0:
         write_feedback(exercise_id[ex], feedback_oh)
         print(feedback_oh)
@@ -292,6 +294,5 @@ else:
 
 # When everything done, release the capture
 out.release()
-os.system("ffmpeg -i outputs\output.mp4 -c:v libx264 -c:a aac -strict experimental outputs\output.mp4")
 cap.release()
 cv2.destroyAllWindows()
