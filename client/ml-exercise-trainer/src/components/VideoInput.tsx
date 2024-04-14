@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState, ChangeEvent } from "react";
+import '../../src/spinner.css' //css for loading animation
 
 interface VideoInputProps {
   width?: number;
@@ -12,10 +13,12 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [source, setSource] = useState<string | undefined>();
+  const [loading, setLoading] = useState<boolean>(false); //loading state inits to false
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    setLoading(true); //start loading when file selected
     const url = URL.createObjectURL(file);
     setSource(url);
 
@@ -30,7 +33,9 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       let res = await response.json();
       if (res.status !== 1) {
         alert("Error uploading file");
+        setLoading(false); //reset loading on error
       } else {
+        setLoading(false); //reset loading on success
         const processedVideoUrl = new URL(res.video_url, window.location.origin)
           .href;
         axios
@@ -80,6 +85,8 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
           src={source}
         />
       )}
+      {loading && <div className="spinner"></div>} {/* Display loading indicator when processing */}
+      {loading && <div>Please Wait</div>} {/* message while loading animation going */}
       {/* <div>{source ? <a href={source} target="_blank">Download Processed Video</a> : "Nothing selected"}</div> */}
       {/* <div>{source || "Nothing selected"}</div> */}
     </div>
