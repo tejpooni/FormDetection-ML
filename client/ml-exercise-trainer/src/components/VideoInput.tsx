@@ -30,20 +30,22 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       let res = await response.json();
       if (res.status !== 1) {
         alert("Error uploading file");
-      }else {
-        const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
-        axios.get('/get_vid', {
-          headers:{
-            "Content-Type": "video/mp4"
-          },
-          responseType: "blob",
-        }).then((response) => {
-          console.log(response.data);
-          const videoURL = URL.createObjectURL(response.data);
-          setSource(videoURL)
-        })
-        
-    }
+      } else {
+        const processedVideoUrl = new URL(res.video_url, window.location.origin)
+          .href;
+        axios
+          .get("/get_vid", {
+            headers: {
+              "Content-Type": "video/mp4",
+            },
+            responseType: "blob",
+          })
+          .then((response) => {
+            console.log(response.data);
+            const videoURL = URL.createObjectURL(response.data);
+            setSource(videoURL);
+          });
+      }
     }
   };
 
@@ -79,7 +81,7 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
         />
       )}
       {/* <div>{source ? <a href={source} target="_blank">Download Processed Video</a> : "Nothing selected"}</div> */}
-      <div>{source || "Nothing selected"}</div>
+      {/* <div>{source || "Nothing selected"}</div> */}
     </div>
   );
 };
