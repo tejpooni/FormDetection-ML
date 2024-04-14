@@ -12,7 +12,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
+    minHeight: "100vh",
     background:
       "linear-gradient(180deg, #0a192f 0%, #172a45 50%, #203a5c 100%)",
     color: "white",
@@ -134,6 +134,7 @@ function App() {
             </ul>
             <li>Upload a .mp4 file</li>
             <li>Must have the entire body in the video frame</li>
+            <li>Please wait for your video to be processed</li>
             <li>Click the refresh button before uploading the next video</li>
           </ul>
         </div>
