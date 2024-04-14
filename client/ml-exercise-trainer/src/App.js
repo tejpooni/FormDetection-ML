@@ -57,6 +57,7 @@ const styles = {
   list: {
     textAlign: "left", // Align list items to the left for better readability
     listStylePosition: "inside", // Ensure bullets/numbers are inside the content flow
+    paddingLeft: 100,
   },
 };
 

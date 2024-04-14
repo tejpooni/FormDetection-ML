@@ -56,19 +56,19 @@ def pushup(list_of_angles):
     
         if elbow_angle < 70:
             if not "90 deg" in feedback_pu:
-                feedback_pu += " Went too low; elbows should be 90 deg"
+                feedback_pu += " You went too low; your elbows should be at 90 deg"
             #__draw_label(frame, 'Label: {}'.format("Went too low; elbows should be 90 deg"), (20,40), (255,255,255))
         if elbow_angle > 100:
             if not "90 deg" in feedback_pu:
-                feedback_pu += " didnt go low enough; elbows should be 90 deg"
+                feedback_pu += " You didn't go low enough; your elbows should be at 90 deg"
             #__draw_label(frame, 'Label: {}'.format("didnt go low enough; elbows should be 90 deg"), (20,20), (255,255,255))
         
         if body_angle < 160:
             if not "hips" in feedback_pu:
-                feedback_pu += " put you hips down so that your body becomes linear"
+                feedback_pu += " Try lowering your hips so your body appears linear"
         if body_angle > 200:
             if not "hips" in feedback_pu:
-                feedback_pu += " push hips up so that your body is in a straight line"
+                feedback_pu += " Push your hips up so that your body is in a straight line"
     return
 
 """
@@ -102,7 +102,7 @@ def overhead(list_of_angles):
 
     if (160 < list_of_angles[0] or 160 < list_of_angles[1]) and (160 < list_of_angles[2] or 160 < list_of_angles[3]):
         if not "arms" in feedback_oh:
-            feedback_oh += "raise arms more (should approach 180 degrees)"
+            feedback_oh += "Try raising your arms higher (they should approach 180 degrees)"
     elif 80 > list_of_angles[0] or 80 > list_of_angles[1]:
         if not "elbow" in feedback_oh:
             feedback_oh += "elbow bad (closer to 90 degrees)"
