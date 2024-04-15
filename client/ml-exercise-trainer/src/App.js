@@ -1,8 +1,6 @@
 import "./App.css";
-import HttpCall from "./components/HttpCall.jsx";
-import WebSocketCall from "./components/WebSocketCall.jsx";
-import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+// import { io } from "socket.io-client";
+// import { useEffect, useState } from "react";
 import VideoInput from "./components/VideoInput.tsx";
 
 // Styles object for consistency and cleaner JSX
@@ -62,48 +60,48 @@ const styles = {
 };
 
 function App() {
-  const [socketInstance, setSocketInstance] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [buttonStatus, setButtonStatus] = useState(false);
+  // const [socketInstance, setSocketInstance] = useState("");
+  // const [loading, setLoading] = useState(true);
+  // const [buttonStatus, setButtonStatus] = useState(false);
 
   const refreshPage = () => {
     window.location.reload();
   };
 
-  const handleClick = () => {
-    if (buttonStatus === false) {
-      setButtonStatus(true);
-    } else {
-      setButtonStatus(false);
-    }
-  };
+  // const handleClick = () => {
+  //   if (buttonStatus === false) {
+  //     setButtonStatus(true);
+  //   } else {
+  //     setButtonStatus(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (buttonStatus === true) {
-      const socket = io("localhost:5001/", {
-        transports: ["websocket"],
-        cors: {
-          origin: "http://localhost:3000/",
-        },
-      });
+  // useEffect(() => {
+  //   if (buttonStatus === true) {
+  //     const socket = io("localhost:5001/", {
+  //       transports: ["websocket"],
+  //       cors: {
+  //         origin: "http://localhost:3000/",
+  //       },
+  //     });
 
-      setSocketInstance(socket);
+  //     // setSocketInstance(socket);
 
-      socket.on("connect", (data) => {
-        console.log(data);
-      });
+  //     socket.on("connect", (data) => {
+  //       console.log(data);
+  //     });
 
-      setLoading(false);
+  //     // setLoading(false);
 
-      socket.on("disconnect", (data) => {
-        console.log(data);
-      });
+  //     socket.on("disconnect", (data) => {
+  //       console.log(data);
+  //     });
 
-      return function cleanup() {
-        socket.disconnect();
-      };
-    }
-  }, [buttonStatus]);
+  //     return function cleanup() {
+  //       socket.disconnect();
+  //     };
+  //   }
+  // }, [buttonStatus]);
 
   return (
     <div className="App" style={styles.app}>
@@ -116,9 +114,9 @@ function App() {
       >
         A.I.thlete - Fitness Trainer
       </h1>
-      <div>
+      {/* <div>
         <HttpCall />
-      </div>
+      </div> */}
       <div style={styles.container}>
         <VideoInput onClick={VideoInput.handleFileChange} />
         <button onClick={refreshPage} style={styles.button}>

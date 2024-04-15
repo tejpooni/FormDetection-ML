@@ -8,12 +8,13 @@ interface VideoInputProps {
 }
 
 const VideoInput: React.FC<VideoInputProps> = (props) => {
-  const { height } = props;
+  // const { height } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [source, setSource] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(false); //loading state inits to false
+  const [datafb, setData] = useState("");
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -36,8 +37,7 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
         setLoading(false); //reset loading on error
       } else {
         setLoading(false); //reset loading on success
-        const processedVideoUrl = new URL(res.video_url, window.location.origin)
-          .href;
+        // const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
         axios
           .get("/get_vid", {
             headers: {
@@ -50,6 +50,15 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
             const videoURL = URL.createObjectURL(response.data);
             setSource(videoURL);
           });
+
+        let res_fb = await fetch("/get_feedback")
+      
+        if (!res_fb.ok) {
+          throw new Error("Failed to fetch feedback");
+        }
+        const responseData = await res_fb.json();
+        console.log(responseData.feedback)
+        setData(responseData.feedback);
       }
     }
   };
@@ -59,6 +68,11 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
   };
 
   return (
+    <>  
+    <div>
+      <h2 style={{ fontFamily: "Roboto, sans-serif" }}>Feedback:</h2>
+      <h3 className="http">{datafb}</h3>
+    </div>
     <div
       style={{
         display: "flex",
@@ -90,6 +104,7 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       {/* <div>{source ? <a href={source} target="_blank">Download Processed Video</a> : "Nothing selected"}</div> */}
       {/* <div>{source || "Nothing selected"}</div> */}
     </div>
+  </>
   );
 };
 
