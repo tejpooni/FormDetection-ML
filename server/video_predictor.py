@@ -82,8 +82,9 @@ def squat(list_of_angles):
     global SUCCESS
 
     if 75 > avg_knee:
-        SUCCESS = False
-        feedback_sq = "You are going too low! "
+        if not SUCCESS:
+            SUCCESS = False
+            feedback_sq = "You are going too low! "
     elif  75 <= avg_knee and avg_knee <= 100:
         SUCCESS = True
     else:
