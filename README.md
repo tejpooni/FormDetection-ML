@@ -85,6 +85,7 @@ And prediction + mediapipe landmarks will be
 
 Project directory:
 
+```
 FormDetection-ML/
 ├── client/
 │   └── ml-exercise-trainer/
@@ -104,4 +105,4 @@ FormDetection-ML/
 │   ├── outputs/
 │   └── uploads/
 └── README.md
-
+```
