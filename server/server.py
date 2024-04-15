@@ -14,21 +14,15 @@ CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 
-
 @app.route('/processed_video/<filename>')
 def processed_video(filename):
     """Serve the processed video."""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
-@app.route("/http-call")
-def http_call():
-    """return JSON with string data as the value"""
-    data = {'data':'This text was fetched using an HTTP call to server on render'}
-    return jsonify(data)
-
-# upload endpoint will acknowledge client (videoUpload component) that it's recv file
-
+"""
+Gets the file from the front end to the server for 
+processing and prediction. 
+"""
 @app.route('/send_file', methods=["POST"])
 def send_file():
     #file upload 
@@ -56,35 +50,22 @@ def send_file():
     print("Sending ack to server")
     return jsonify(ack);
 
+"""
+Gets the processed with body wire frame
+and pass it to the front end to display
+"""
 @app.route('/get_vid', methods=["GET"])
 def get_vid():  
     return sf(os.path.join('outputs', 'output.mp4'), mimetype='video/mp4', as_attachment=True)
-    #return sf("outputs\output.mp4", mimetype='video/mp4', as_attachment=True)
-
+    
+"""
+Gets the feedback and pass it to the
+front end for display
+"""
 @app.route('/get_feedback', methods=["GET"])
 def get_feedback():
     return sf(os.path.join('outputs', 'feedback.json'))
-    #return sf("outputs\\feedback.json")
-
-@socketio.on("connect")
-def connected():
-    """event listener when client connects to the server"""
-    print(request.sid)
-    print("client has connected")
-    emit("connect",{"data":f"id: {request.sid} is connected"})
-
-@socketio.on('data')
-def handle_message(data):
-    """event listener when client types a message"""
-    print("data from the front end: ",str(data))
-    emit("data",{'data':data,'id':request.sid},broadcast=True)
-
-@socketio.on("disconnect")
-def disconnected():
-    """event listener when client disconnects to the server"""
-    print("user disconnected")
-    emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
-
+    
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)  # Ensure upload folder exists
