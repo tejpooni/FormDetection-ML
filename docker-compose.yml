@@ -1,0 +1,14 @@
+version: "3"
+services:
+  backend:
+    build: ./path_to_flask_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./path_to_flask_app:/usr/src/app
+  frontend:
+    build: ./path_to_react_app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./path_to_react_app:/usr/src/app
