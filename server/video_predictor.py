@@ -14,15 +14,6 @@ class OwnLandmark:
         self.x = x
         self.y = y
 
-"""
-    list of angles:
-        0: right_wrist_right_elbow_right_shoulder
-        1: left_wrist_left_elbow_left_shoulder
-        2: right_elbow_right_shoulder_right_hip
-        3: left_elbow_left_shoulder_left_hip
-        4: left_shoulder_left_hip_left_ankle
-        5: right_shoulder_right_hip_right_ankle
-"""
 
 def write_feedback(exercise, feedback):
     # Data to be written
@@ -32,10 +23,19 @@ def write_feedback(exercise, feedback):
     # Serializing json
     json_object = json.dumps(dictionary, indent=2)
     # Writing to sample.json
-    #with open("outputs\\feedback.json", "w") as outfile:
     with open(os.path.join("outputs", "feedback.json"), "w") as outfile:
         outfile.write(json_object)
 
+
+"""
+    list of angles:
+        0: right_wrist_right_elbow_right_shoulder
+        1: left_wrist_left_elbow_left_shoulder
+        2: right_elbow_right_shoulder_right_hip
+        3: left_elbow_left_shoulder_left_hip
+        4: left_shoulder_left_hip_left_ankle
+        5: right_shoulder_right_hip_right_ankle
+"""
 def pushup(list_of_angles):
     list_of_angles[0] = abs(list_of_angles[0])
     list_of_angles[1] = abs(list_of_angles[1])
@@ -50,19 +50,16 @@ def pushup(list_of_angles):
     elbow_angle = (list_of_angles[0] + list_of_angles[1]) / 2
     body_angle = (list_of_angles[4] + list_of_angles[5]) / 2
 
-    #print(f"body angle: {body_angle}, elbow angle: {elbow_angle}")
     if (70 <= elbow_angle <= 100) and (160 <= body_angle <= 200):
         SUCCESS = True
     else:
-    
+        
         if elbow_angle < 70:
             if not "90 deg" in feedback_pu:
                 feedback_pu += " You went too low; your elbows should be at 90 deg"
-            #__draw_label(frame, 'Label: {}'.format("Went too low; elbows should be 90 deg"), (20,40), (255,255,255))
         if elbow_angle > 100:
             if not "90 deg" in feedback_pu:
                 feedback_pu += " You didn't go low enough; your elbows should be at 90 deg"
-            #__draw_label(frame, 'Label: {}'.format("didnt go low enough; elbows should be 90 deg"), (20,20), (255,255,255))
         
         if body_angle < 160:
             if not "hips" in feedback_pu:
@@ -71,6 +68,7 @@ def pushup(list_of_angles):
             if not "hips" in feedback_pu:
                 feedback_pu += " Push your hips up so that your body is in a straight line"
     return
+
 
 """
     0: left_hip_left_knee_left_ankle
@@ -92,6 +90,7 @@ def squat(list_of_angles):
         if not "too" in feedback_sq:
             feedback_sq = "You need to go lower!"
 
+
 """
     0: left_wrist_left_elbow_left_shoulder
     1: right_wrist_right_elbow_right_shoulder
@@ -112,14 +111,18 @@ def overhead(list_of_angles):
     else:
         SUCCESS = True
     
-
+"""
+a, b, c, are coordinates in the form of tuples  
+with x & y being its first & second elements.
+"""
 def find_angle(a,b,c):
-  # a, b, c, are coordinates in the form of tuples  
-  # with x & y being its first & second elements.
   radians = np.arctan2(c.y-b.y, c.x-b.x) - np.arctan2(a.y-b.y, a.x-b.x)
   return radians * (180/math.pi)
 
 
+"""
+Draws label on cv2 window
+"""
 def __draw_label(img, text, pos, bg_color):
    font_face = cv2.FONT_HERSHEY_SIMPLEX
    scale = 2
@@ -147,29 +150,28 @@ feedback_pu = ""
 feedback_oh = ""
 frame_ids = [0,0,0]
 
+# Retreieve saved model
 model = keras.models.load_model(r"exercise_predictor.keras")
+
+# Checks for video uploaded through front end (Supports mp4 and mov file types)
 for f in os.listdir("uploads"):
     print(f)
     if str(f).endswith(".mp4"):
-        #user_input = r"uploads\videoInput.mp4" ## THIS NEEDS TO CHANGE 
         user_input = os.path.join("uploads", "videoInput.mp4")
     elif str(f).endswith(".mov"):
-        #user_input = r"uploads\videoInput.mov"
         user_input = os.path.join("uploads", "videoInput.mov")
     else:
         print("No filetype supported")
         os._exit(0)
 
-# Open the device at the ID 0
-# Use the camera ID based on
-# /dev/videoID needed
+# Processes video
 cap = cv2.VideoCapture(user_input)
 width = int(cap.get(3))
 height = int(cap.get(4))
 fourcc = cv2.VideoWriter_fourcc('H', '2', '6', '4')
 
+# Build new video
 output_path = os.path.join('outputs', 'output.mp4')
-# 'outputs\output.mp4'
 out = cv2.VideoWriter(output_path, fourcc, 20.0, (width,height))
 
 #Check if camera was opened correctly
@@ -187,13 +189,13 @@ pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 # List to store pose landmarks for each frame
 pose_landmarks_list = []
 
-# 2) fetch one frame at a time from your camera
+# fetch one frame at a time from input video and predict using model
 while cap.isOpened():
     
     # frame is a numpy array, that you can predict on 
     ret, frame = cap.read()
 
-        # Check if a frame was successfully read
+    # Check if a frame was successfully read
     if not ret:
         print("Error: Failed to read frame from the video. / End of video reached.")
         break
@@ -205,23 +207,24 @@ while cap.isOpened():
 
 
     imageRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
     results = pose.process(imageRGB)
 
     # Draw landmarks on the image
     if results.pose_landmarks:
         mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-    else:
+    else: # Cannot detect landmark
         continue
 
-        # Extract pose landmarks for the current frame
+    # Extract pose landmarks for the current frame
     pose_landmarks = []
     pose_landmarks_list = []
     if results.pose_landmarks:
+        # Calculating x y values for mid hip
         mid_hip_x = (results.pose_landmarks.landmark[24].x + results.pose_landmarks.landmark[23].x)/2
         mid_hip_y = (results.pose_landmarks.landmark[24].y + results.pose_landmarks.landmark[23].y)/2
         mid_hip = OwnLandmark(mid_hip_x, mid_hip_y)
 
+        # Calculate different angles based on landmarks
         right_elbow_right_shoulder_right_hip    = find_angle(results.pose_landmarks.landmark[14], results.pose_landmarks.landmark[12], results.pose_landmarks.landmark[24])
         left_elbow_left_shoulder_left_hip       = find_angle(results.pose_landmarks.landmark[13], results.pose_landmarks.landmark[11], results.pose_landmarks.landmark[23])
         right_knee_mid_hip_left_knee            = find_angle(results.pose_landmarks.landmark[26], mid_hip, results.pose_landmarks.landmark[25])
@@ -232,7 +235,7 @@ while cap.isOpened():
         left_shoulder_left_hip_left_ankle       = find_angle(results.pose_landmarks.landmark[11], results.pose_landmarks.landmark[23], results.pose_landmarks.landmark[27])
         right_shoulder_right_hip_right_ankle    = find_angle(results.pose_landmarks.landmark[12], results.pose_landmarks.landmark[24], results.pose_landmarks.landmark[28])
 
-
+        # Storing angles
         pose_landmarks.append(right_elbow_right_shoulder_right_hip)
         pose_landmarks.append(left_elbow_left_shoulder_left_hip)
         pose_landmarks.append(right_knee_mid_hip_left_knee)
@@ -241,24 +244,24 @@ while cap.isOpened():
         pose_landmarks.append(right_wrist_right_elbow_right_shoulder)
         pose_landmarks.append(left_wrist_left_elbow_left_shoulder)
 
-    
     # Append the pose landmarks to the list
     pose_landmarks_list.append(pose_landmarks)
 
     # Convert pose landmarks list to numpy array
     pose_landmarks_array = np.array(pose_landmarks_list)
 
+    # Predict video frame using model
     prediction = model.predict(pose_landmarks_array)
-    # you may need then to process prediction to obtain a label of your data, depending on your model. Probably you'll have to apply an argmax to prediction to obtain a label.
+
     predicted_class = np.argmax(prediction, axis=-1)
-    #print(prediction)
-    #print(predicted_class
-    # 4) Adding the label on your frame
+
+    # Adding the label on the cv2 frame
     __draw_label(frame, 'Label: {}'.format(exercise_id[predicted_class[0]]), (40,40), (255,255,255))
 
     # Feedback section
     frame_ids[predicted_class[0]] += 1
 
+    # Generates feedback based on exercise
     if predicted_class[0] == 0: # Overhead Press
         overhead([left_wrist_left_elbow_left_shoulder, right_wrist_right_elbow_right_shoulder, 
                   left_elbow_left_shoulder_left_hip, right_elbow_right_shoulder_right_hip])
@@ -268,34 +271,34 @@ while cap.isOpened():
                 left_elbow_left_shoulder_left_hip, left_shoulder_left_hip_left_ankle, right_shoulder_right_hip_right_ankle])
         print(SUCCESS)
     elif predicted_class[0] == 2: # Squats
-        # right hip, right knee, right ankle
         squat([left_hip_left_knee_left_ankle, right_hip_right_knee_right_ankle])
         print(SUCCESS)
         
 
-    # 5) Display the resulting frame
+    # Writes the frame to new video
     out.write(frame)
-    #cv2.imshow("preview",frame)
    
     #Waits for a user input to quit the application
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+# Gets the most detected exercise based on all frame predictions
 ex = np.argmax(frame_ids)
+
+# If perfect form detected
 if SUCCESS:
-    #print("good job")
     success_list = ["Good Job!", "Nice Work!", "Keep it up!", "Great Effort!", "Fantastic job!"] 
-    feedback = r.choice(success_list)
+    feedback = "Good form, " + r.choice(success_list)
     write_feedback(exercise_id[ex], feedback)
     print(feedback)
-else:
-    if ex == 0:
+else: # Improper form
+    if ex == 0: # Overhead
         write_feedback(exercise_id[ex], feedback_oh)
         print(feedback_oh)
-    elif ex == 1:
+    elif ex == 1: # Pushups
         write_feedback(exercise_id[ex], feedback_pu)
         print(feedback_pu)
-    else:
+    else: # Squats
         write_feedback(exercise_id[ex], feedback_sq)
         print(feedback_sq)
 
