@@ -32,7 +32,8 @@ def write_feedback(exercise, feedback):
     # Serializing json
     json_object = json.dumps(dictionary, indent=2)
     # Writing to sample.json
-    with open("outputs\\feedback.json", "w") as outfile:
+    #with open("outputs\\feedback.json", "w") as outfile:
+    with open(os.path.join("outputs", "feedback.json"), "w") as outfile:
         outfile.write(json_object)
 
 def pushup(list_of_angles):
@@ -150,9 +151,11 @@ model = keras.models.load_model(r"exercise_predictor.keras")
 for f in os.listdir("uploads"):
     print(f)
     if str(f).endswith(".mp4"):
-        user_input = r"uploads\videoInput.mp4" ## THIS NEEDS TO CHANGE 
+        #user_input = r"uploads\videoInput.mp4" ## THIS NEEDS TO CHANGE 
+        user_input = os.path.join("uploads", "videoInput.mp4")
     elif str(f).endswith(".mov"):
-        user_input = r"uploads\videoInput.mov"
+        #user_input = r"uploads\videoInput.mov"
+        user_input = os.path.join("uploads", "videoInput.mov")
     else:
         print("No filetype supported")
         os._exit(0)
@@ -164,7 +167,10 @@ cap = cv2.VideoCapture(user_input)
 width = int(cap.get(3))
 height = int(cap.get(4))
 fourcc = cv2.VideoWriter_fourcc('H', '2', '6', '4')
-out = cv2.VideoWriter('outputs\output.mp4', fourcc, 20.0, (width,height))
+
+output_path = os.path.join('outputs', 'output.mp4')
+# 'outputs\output.mp4'
+out = cv2.VideoWriter(output_path, fourcc, 20.0, (width,height))
 
 #Check if camera was opened correctly
 if not (cap.isOpened()):

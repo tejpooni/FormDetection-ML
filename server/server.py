@@ -58,11 +58,13 @@ def send_file():
 
 @app.route('/get_vid', methods=["GET"])
 def get_vid():  
-    return sf("outputs\output.mp4", mimetype='video/mp4', as_attachment=True)
+    return sf(os.path.join('outputs', 'output.mp4'), mimetype='video/mp4', as_attachment=True)
+    #return sf("outputs\output.mp4", mimetype='video/mp4', as_attachment=True)
 
 @app.route('/get_feedback', methods=["GET"])
 def get_feedback():
-    return sf("outputs\\feedback.json")
+    return sf(os.path.join('outputs', 'feedback.json'))
+    #return sf("outputs\\feedback.json")
 
 @socketio.on("connect")
 def connected():
