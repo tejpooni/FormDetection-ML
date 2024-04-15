@@ -6,14 +6,13 @@ from flask import send_file as sf
 from werkzeug.utils import secure_filename
 import os
 
+
 # app init 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['UPLOAD_FOLDER'] = 'uploads/'  # Directory where files will be stored
 CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
-
-
 
 @app.route('/processed_video/<filename>')
 def processed_video(filename):
@@ -58,11 +57,11 @@ def send_file():
 
 @app.route('/get_vid', methods=["GET"])
 def get_vid():  
-    return sf("outputs\output.mp4", mimetype='video/mp4', as_attachment=True)
+    return sf(os.path.join('outputs', 'output.mp4'), mimetype='video/mp4', as_attachment=True)
 
 @app.route('/get_feedback', methods=["GET"])
 def get_feedback():
-    return sf("outputs\\feedback.json")
+    return sf(os.path.join('outputs', 'feedback.json'))
 
 @socketio.on("connect")
 def connected():
