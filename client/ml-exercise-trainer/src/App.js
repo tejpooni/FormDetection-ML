@@ -1,6 +1,4 @@
 import "./App.css";
-// import { io } from "socket.io-client";
-// import { useEffect, useState } from "react";
 import VideoInput from "./components/VideoInput.tsx";
 
 // Styles object for consistency and cleaner JSX
@@ -60,7 +58,7 @@ const styles = {
 };
 
 function App() {
-
+  //refresh button action
   const refreshPage = () => {
     window.location.reload();
   };
@@ -76,9 +74,6 @@ function App() {
       >
         A.I.thlete - Fitness Trainer
       </h1>
-      {/* <div>
-        <HttpCall />
-      </div> */}
       <div style={styles.container}>
         <VideoInput onClick={VideoInput.handleFileChange} />
         <button onClick={refreshPage} style={styles.button}>

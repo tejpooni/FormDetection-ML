@@ -8,20 +8,19 @@ interface VideoInputProps {
 }
 
 const VideoInput: React.FC<VideoInputProps> = (props) => {
-  // const { height } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [source, setSource] = useState<string | undefined>();
+  const [source, setSource] = useState<string | undefined>(); //video player
   const [loading, setLoading] = useState<boolean>(false); //loading state inits to false
-  const [datafb, setData] = useState("");
+  const [datafb, setData] = useState(""); //data for feedback
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setLoading(true); //start loading when file selected
     const url = URL.createObjectURL(file);
-    setSource(url);
+    setSource(url); //set video player to have video uploaded
 
     if (file != null) {
       const data = new FormData();
@@ -37,7 +36,6 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
         setLoading(false); //reset loading on error
       } else {
         setLoading(false); //reset loading on success
-        // const processedVideoUrl = new URL(res.video_url, window.location.origin).href;
         axios
           .get("/get_vid", {
             headers: {
@@ -49,13 +47,14 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
             console.log(response.data);
             const videoURL = URL.createObjectURL(response.data);
             setSource(videoURL);
-          });
+          }); //get the processed video and set player to have this
 
-        let res_fb = await fetch("/get_feedback")
+        let res_fb = await fetch("/get_feedback"); //get feedback
       
         if (!res_fb.ok) {
           throw new Error("Failed to fetch feedback");
         }
+        //display the feedback for the user
         const responseData = await res_fb.json();
         console.log(responseData.feedback)
         setData(responseData.feedback);
@@ -101,8 +100,6 @@ const VideoInput: React.FC<VideoInputProps> = (props) => {
       )}
       {loading && <div className="spinner"></div>} {/* Display loading indicator when processing */}
       {loading && <div>Please Wait</div>} {/* message while loading animation going */}
-      {/* <div>{source ? <a href={source} target="_blank">Download Processed Video</a> : "Nothing selected"}</div> */}
-      {/* <div>{source || "Nothing selected"}</div> */}
     </div>
   </>
   );
