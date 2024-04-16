@@ -26,7 +26,7 @@ Ensure you have Python version 3.11._ (3.11.5, 3.11.7 and 3.11.9 are known to wo
 
 Download project file and extract it to directory of your choice
 
-Navigate to project directory using cd in terminal
+Navigate to server directory using cd in terminal
 
 Execute command “pip install -r requirements.txt” in terminal in order to install project dependencies
 
@@ -39,7 +39,7 @@ The following are the Python pip installs in case requirements.txt fails to inst
 >pandas
 >scikit-learn
 
-While still in the project directory
+Navigate back to the project directory
 
 React steps:
 Installing relevant react packages
