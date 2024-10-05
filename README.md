@@ -1,4 +1,4 @@
-# README (Group 43)
+# README
 
 
 ### Description
